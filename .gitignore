@@ -1,0 +1,9 @@
+# API Keys - NEVER commit these!
+config/api-keys.js
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
