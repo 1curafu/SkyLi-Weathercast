@@ -1,0 +1,29 @@
+{
+  "name": "skyli-weathercast",
+  "version": "1.0.0",
+  "description": "Helle we do Weather Magic :D",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1curafu/SkyLi-Weathercast.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/1curafu/SkyLi-Weathercast/issues"
+  },
+  "homepage": "https://github.com/1curafu/SkyLi-Weathercast#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
