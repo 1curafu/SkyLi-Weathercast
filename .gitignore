@@ -1,0 +1,20 @@
+# Environment variables - NEVER commit these!
+.env
+
+# API Keys (legacy)
+config/api-keys.js
+
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
