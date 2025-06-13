@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// API endpoints for your organized structure
+// API endpoints for organized structure
 app.get('/api/weather/current', async (req, res) => {
     const { lat, lng } = req.query;
     
@@ -45,6 +45,23 @@ app.get('/api/config', (req, res) => {
     res.json({
         googlePlacesKey: process.env.GOOGLE_PLACES_API_KEY
     });
+});
+
+app.get('/api/health', (req, res) => {
+    res.json({ 
+        status: 'Server is running!', 
+        timestamp: new Date().toISOString(),
+        endpoints: [
+            '/api/weather/current',
+            '/api/weather/forecast', 
+            '/api/config',
+            '/api/health'
+        ]
+    });
+});
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
