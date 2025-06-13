@@ -11,26 +11,30 @@
     <body>
         <div class="weather-container">
             <div class="left-section">
-                <input type="text" class="location-input" placeholder="Enter location">
+                <input type="text" id="locationInput" class="location-input" placeholder="Enter location">
 
                 <div class="current-weather">
-                    <div class="temperature">28°</div>
-                    <div class="weather-condition">Rainy Day</div>
-                    <div class="weather-description">Today, expect a rainy day...</div>
+                    <div id="currentTemp" class="temperature">--°</div>
+                    <div id="currentCondition" class="weather-condition">Waiting for location</div>
+                    <div id="currentDescription" class="weather-description">Please select a location to view weather</div>
                 </div>
 
                 <div class="weather-details">
                     <div class="detail-card">
                         <h3>Feels Like</h3>
+                        <div id="feelsLike" class="value">--°</div>
                     </div>
                     <div class="detail-card">
                         <h3>Precipitation</h3>
+                        <div id="precipitation" class="value">--%</div>
                     </div>
                     <div class="detail-card">
                         <h3>Visibility</h3>
+                        <div id="visibility" class="value">-- km</div>
                     </div>
                     <div class="detail-card">
                         <h3>Humidity</h3>
+                        <div id="humidity" class="value">--%</div>
                     </div>
                 </div>
             </div>
@@ -38,18 +42,26 @@
             <div class="right-section">
                 <div class="hourly-forecast">
                     <h2>Hourly Forecast</h2>
+                    <div id="hourlyContainer" class="hourly-container">
+                        <div class="loading-message">Select a location to view hourly forecast</div>
+                    </div>
                 </div>
                 
                 <div class="daily-forecast">
                     <h2>10-Day Forecast</h2>
+                    <div id="dailyContainer" class="daily-container">
+                        <div class="loading-message">Select a location to view daily forecast</div>
+                    </div>
                 </div>
                 
                 <div class="additional-info">
                     <div class="info-card">
                         <h3>UV Index</h3>
+                        <div id="uvIndex" class="value">--</div>
                     </div>
                     <div class="info-card">
                         <h3>Wind Info</h3>
+                        <div id="windInfo" class="value">-- km/h</div>
                     </div>
                 </div>
             </div>
