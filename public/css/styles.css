@@ -29,7 +29,7 @@ body {
 .location-input {
     padding: 15px;
     border: 2px solid #ccc;
-    border-radius: 25px;
+    border-radius: 50px;
     font-size: 16px;
     outline: none;
 }
@@ -66,7 +66,7 @@ body {
 
 .detail-card {
     border: 2px solid #ccc;
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 20px;
     height: 120px;
     background: white;
@@ -86,15 +86,16 @@ body {
 
 .hourly-forecast {
     border: 2px solid #ccc;
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 20px;
     height: 220px;
     background: white;
+    position: relative;
 }
 
 .daily-forecast {
     border: 2px solid #ccc;
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 20px;
     height: 280px;
     background: white;
@@ -115,7 +116,7 @@ body {
 
 .info-card {
     border: 2px solid #ccc;
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 20px;
     height: 120px;
     background: white;
@@ -125,6 +126,124 @@ body {
     font-size: 14px;
     color: #666;
     margin-bottom: 10px;
+}
+
+.scrollable-horizontal {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    gap: 12px;
+    padding: 10px 0 25px 0;
+    white-space: nowrap;
+    max-width: 500px;
+}
+
+.scrollable-horizontal::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scrollable-horizontal::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50px;
+}
+
+.scrollable-horizontal::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50px;
+    transition: background 0.3s ease;
+}
+
+.scrollable-horizontal:hover::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.scrollable-horizontal::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.scrollable-vertical {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    padding-right: 15px;
+}
+
+.scrollable-vertical::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-vertical::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50px;
+}
+
+.scrollable-vertical::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50px;
+    transition: background 0.3s ease;
+}
+
+.scrollable-vertical:hover::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.scrollable-vertical::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.hourly-item {
+    flex: 0 0 auto;
+    min-width: 80px;
+    max-width: 80px;
+    text-align: center;
+    padding: 12px 8px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 40px;
+    color: #333;
+    font-size: 12px;
+    line-height: 1.2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    white-space: normal;
+}
+
+.daily-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 50px;
+}
+
+.value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.loading-message {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+.hourly-wrapper,
+.daily-wrapper {
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow: hidden;
+}
+
+.hourly-container,
+.daily-container {
+    width: 100%;
+    height: 100%;
 }
 
 /* Responsive Design */
@@ -139,5 +258,39 @@ body {
     
     .weather-condition {
         font-size: 24px;
+    }
+    
+    .weather-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .additional-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .hourly-item {
+        min-width: 70px;
+        max-width: 70px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .temperature {
+        font-size: 60px;
+    }
+    
+    .weather-condition {
+        font-size: 18px;
+    }
+    
+    .hourly-item {
+        min-width: 60px;
+        max-width: 60px;
+        font-size: 10px;
     }
 }
