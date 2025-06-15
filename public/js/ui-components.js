@@ -111,12 +111,12 @@ function updateWeatherDetails(data) {
 function updateAdditionalInfo(data) {
     document.getElementById('uvIndex').textContent = data.uvIndex || '--';
     document.getElementById('windInfo').textContent = `${data.windSpeed} km/h ${data.windDirection || ''}`;
-    
-    // Future enhancements for air quality
-    //if (data.airQuality && document.getElementById('airQuality')) {
-       //const aqiElement = document.getElementById('airQuality');
-        //aqiElement.textContent = `${data.airQuality.aqiText} (${data.airQuality.aqi})`;
-    //}
+
+//air quality
+    if (data.airQuality && document.getElementById('airQuality')) {
+       const aqiElement = document.getElementById('airQuality');
+        aqiElement.textContent = `${data.airQuality.aqiText} (${data.airQuality.aqi})`;
+    }
 }
 
 // Hourly forecast
