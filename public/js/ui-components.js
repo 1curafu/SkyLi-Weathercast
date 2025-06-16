@@ -111,12 +111,12 @@ function updateWeatherDetails(data) {
 function updateAdditionalInfo(data) {
     document.getElementById('uvIndex').textContent = data.uvIndex || '--';
     document.getElementById('windInfo').textContent = `${data.windSpeed} km/h ${data.windDirection || ''}`;
-    
-    // Future enhancements for air quality
-    //if (data.airQuality && document.getElementById('airQuality')) {
-       //const aqiElement = document.getElementById('airQuality');
-        //aqiElement.textContent = `${data.airQuality.aqiText} (${data.airQuality.aqi})`;
-    //}
+
+//air quality
+    if (data.airQuality && document.getElementById('airQuality')) {
+       const aqiElement = document.getElementById('airQuality');
+        aqiElement.textContent = `${data.airQuality.aqiText} (${data.airQuality.aqi})`;
+    }
 }
 
 // Hourly forecast
@@ -192,16 +192,16 @@ function createDailyForecastItems(dailyData) {
         rightDiv.style.display = 'flex';
         rightDiv.style.gap = '8px';
         
+        const lowTemp = document.createElement('span');
+        lowTemp.className = 'temp-low';
+        lowTemp.textContent = `${Math.round(day.tempMin)}°`;
+
         const highTemp = document.createElement('span');
         highTemp.className = 'temp-high';
         highTemp.textContent = `${Math.round(day.tempMax)}°`;
         
-        const lowTemp = document.createElement('span');
-        lowTemp.className = 'temp-low';
-        lowTemp.textContent = `${Math.round(day.tempMin)}°`;
-        
-        rightDiv.appendChild(highTemp);
         rightDiv.appendChild(lowTemp);
+        rightDiv.appendChild(highTemp);
         
         // Append sections to main item
         dailyItem.appendChild(leftDiv);
