@@ -192,16 +192,16 @@ function createDailyForecastItems(dailyData) {
         rightDiv.style.display = 'flex';
         rightDiv.style.gap = '8px';
         
+        const lowTemp = document.createElement('span');
+        lowTemp.className = 'temp-low';
+        lowTemp.textContent = `${Math.round(day.tempMin)}°`;
+
         const highTemp = document.createElement('span');
         highTemp.className = 'temp-high';
         highTemp.textContent = `${Math.round(day.tempMax)}°`;
         
-        const lowTemp = document.createElement('span');
-        lowTemp.className = 'temp-low';
-        lowTemp.textContent = `${Math.round(day.tempMin)}°`;
-        
-        rightDiv.appendChild(highTemp);
         rightDiv.appendChild(lowTemp);
+        rightDiv.appendChild(highTemp);
         
         // Append sections to main item
         dailyItem.appendChild(leftDiv);
