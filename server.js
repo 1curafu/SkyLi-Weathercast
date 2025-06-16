@@ -116,7 +116,7 @@ app.get('/api/weather/current/:lat/:lon', async (req, res) => {
             windSpeed: Math.round((weatherData.wind?.speed || 0) * 3.6),
             windDirection: weatherData.wind?.deg || 0,
             visibility: Math.round((weatherData.visibility || 0) / 1000),
-            uvIndex: uvIndex, // Real UV from your Developer plan
+            uvIndex: uvIndex,
             feelsLike: Math.round(weatherData.main.feels_like),
             sunrise: weatherData.sys.sunrise,
             sunset: weatherData.sys.sunset,
@@ -139,7 +139,7 @@ app.get('/api/forecast/hourly/:lat/:lon', async (req, res) => {
     try {
         const { lat, lon } = req.params;
         
-        console.log(`Getting TRUE hourly forecast for ${lat}, ${lon}`);
+        console.log(`Getting hourly forecast for ${lat}, ${lon}`);
         
         const url = `https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric&cnt=24`;
         
@@ -175,7 +175,7 @@ app.get('/api/forecast/hourly/:lat/:lon', async (req, res) => {
             pressure: hour.main.pressure
         }));
         
-        console.log(`TRUE hourly forecast: ${hourlyData.length} entries`);
+        console.log(`Hourly forecast: ${hourlyData.length} entries`);
         res.json(hourlyData);
         
     } catch (error) {
@@ -202,29 +202,35 @@ app.get('/api/forecast/daily/:lat/:lon', async (req, res) => {
         }
         
         const data = await response.json();
-
-        let total24hPrecip = 0;
-        data.list.forEach(hour => {
-            if (hour.rain && hour.rain['1h']) {
-                total24hPrecip += hour.rain['1h'];
-            }
-            if (hour.snow && hour.snow['1h']) {
-                total24hPrecip += hour.snow['1h'];
-            }
-        });
         
-        const dailyData = data.list.slice(0, 10).map(day => ({
-            date: day.dt * 1000,
-            tempMax: Math.round(day.temp.max),
-            tempMin: Math.round(day.temp.min),
-            condition: day.weather[0].main,
-            description: day.weather[0].description,
-            iconCode: day.weather[0].icon,
-            precipitation: Math.round(total24hPrecip * 10) / 10,
-            humidity: day.humidity,
-            pressure: day.pressure,
-            windSpeed: Math.round((day.speed || 0) * 3.6)
-        }));
+        const dailyData = data.list.slice(0, 10).map(day => {
+            let precipitation = 0;
+            
+            if (day.pop !== undefined) {
+                precipitation = Math.round(day.pop * 100);
+            } else if (day.rain !== undefined) {
+                precipitation = day.rain;
+            } else if (day.snow !== undefined) {
+                precipitation = day.snow;
+            } else if (day.precipitation !== undefined) {
+                precipitation = Math.round(day.precipitation * 100);
+            }
+            
+            console.log(`Day ${new Date(day.dt * 1000).toDateString()}: precipitation = ${precipitation}%`);
+            
+            return {
+                date: day.dt * 1000,
+                tempMax: Math.round(day.temp.max),
+                tempMin: Math.round(day.temp.min),
+                condition: day.weather[0].main,
+                description: day.weather[0].description,
+                iconCode: day.weather[0].icon,
+                precipitation: precipitation,
+                humidity: day.humidity,
+                pressure: day.pressure,
+                windSpeed: Math.round((day.speed || 0) * 3.6)
+            };
+        });
         
         console.log(`Daily forecast: ${dailyData.length} days`);
         res.json(dailyData);
