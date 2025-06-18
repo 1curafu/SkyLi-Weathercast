@@ -5,10 +5,10 @@ class RealtimeUpdater {
         this.lastUpdateTime = 0;
         this.updateCount = 0;
         this.intervals = {
-            current: 5 * 60 * 1000,      // 5 minutes
+            current: 10 * 60 * 1000,      // 10 minutes
             hourly: 30 * 60 * 1000,      // 30 minutes
             daily: 2 * 60 * 60 * 1000,   // 2 hours
-            pollution: 15 * 60 * 1000    // 15 minutes
+            pollution: 30 * 60 * 1000    //  30 minutes
         };
         
         this.init();

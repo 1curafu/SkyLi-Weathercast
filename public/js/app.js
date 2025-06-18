@@ -12,12 +12,20 @@ class WeatherApp {
     }
 
     async init() {
-        this.setupEventListeners();
-        this.loadUserPreferences();
-        await this.loadDefaultLocation();
-        
-        Utils.debugLog('Weather app initialized successfully');
-    }
+    this.setupEventListeners();
+    this.loadUserPreferences();
+    await this.loadDefaultLocation();
+    
+    // Start realtime updater after initialization
+    setTimeout(() => {
+        if (window.realtimeUpdater && !window.realtimeUpdater.isActive) {
+            Utils.debugLog('Auto-starting realtime updater...');
+            window.realtimeUpdater.start();
+        }
+    }, 2000);
+    
+    Utils.debugLog('Weather app initialized successfully');
+}
 
     // Event Listeners and State Management
 
@@ -512,6 +520,18 @@ class WeatherApp {
             this.updateAirQuality(airPollution);
 
             this.currentWeather = currentWeather;
+
+            if (window.realtimeUpdater) {
+                if (!window.realtimeUpdater.isActive) {
+                    Utils.debugLog('Starting realtime updater...');
+                    window.realtimeUpdater.start();
+                } else {
+                    Utils.debugLog('Realtime updater already active');
+                }
+            } 
+            else {
+                Utils.debugLog('Realtime updater not found!', 'error');
+            }
             
             Utils.debugLog(`Weather loaded for ${location.name}`, {
                 location,
@@ -524,7 +544,7 @@ class WeatherApp {
             Utils.debugLog('Weather loading error', error, 'error');
         } finally {
             this.hideLoading();
-        }
+        }        
     }
 
     async fetchCurrentWeather(lat, lon) {
@@ -548,9 +568,8 @@ class WeatherApp {
     updateLocationDisplay(location) {
         const locationElement = document.getElementById('locationName');
         if (locationElement) {
-            const displayName = location.state 
-                ? `${location.name}, ${location.state}, ${location.country}`
-                : `${location.name}, ${location.country}`;
+            const parts = [location.name, location.state, location.country].filter(part => part && part !== 'undefined');
+            const displayName = parts.join(', ');
             locationElement.textContent = displayName;
         }
     }
@@ -558,7 +577,11 @@ class WeatherApp {
     updateCurrentWeather(weather) {
         if (!weather) return;
 
-        // Update temperature
+        if (window.backgroundController) {
+        window.backgroundController.setWeather(weather);
+        Utils.debugLog('🌈 Background updated for weather condition:', weather.condition);
+    }
+
         const tempElement = document.getElementById('currentTemp');
         if (tempElement) {
             tempElement.textContent = Utils.formatTemperature(weather.temp);
@@ -738,6 +761,45 @@ class WeatherApp {
         container.style.color = aqiInfo.color;
     }
 
+    async refreshAllWeatherData() {
+    if (!this.currentLocation) {
+        Utils.debugLog('No current location for refresh', 'warning');
+        return false;
+    }
+
+    Utils.debugLog('Refreshing all weather data...');
+
+    try {
+        const [currentWeather, hourlyForecast, dailyForecast, airPollution] = await Promise.all([
+            this.fetchCurrentWeather(this.currentLocation.lat, this.currentLocation.lon),
+            this.fetchHourlyForecast(this.currentLocation.lat, this.currentLocation.lon),
+            this.fetchDailyForecast(this.currentLocation.lat, this.currentLocation.lon),
+            this.fetchAirPollution(this.currentLocation.lat, this.currentLocation.lon)
+        ]);
+
+        this.lastHourlyData = hourlyForecast;
+
+        this.updateCurrentWeather(currentWeather);
+        this.updateHourlyForecast(hourlyForecast);
+        this.updateDailyForecast(dailyForecast);
+        this.updateAirQuality(airPollution);
+
+        this.currentWeather = currentWeather;
+
+        if (window.backgroundController) {
+            window.backgroundController.setWeather(currentWeather);
+        }
+
+        Utils.debugLog('All weather data refreshed successfully');
+        return true;
+
+        } 
+        catch (error) {
+        Utils.debugLog('Weather refresh error', error, 'error');
+        return false;
+        }
+    }
+
     // User Preferences Management
 
     async loadDefaultLocation() {
@@ -792,23 +854,30 @@ class WeatherApp {
     }
 
     async reverseGeocode(lat, lon) {
-        try {
-            const response = await fetch(`/api/geocode/${lat},${lon}`);
-            if (response.ok) {
-                return await response.json();
-            }
-        } catch (error) {
-            Utils.debugLog('Reverse geocoding failed', error, 'warn');
+    try {
+        const response = await fetch(`/api/geocode/${lat},${lon}`);
+        if (response.ok) {
+            const data = await response.json();
+            return {
+                name: data.name || 'Current Location',
+                country: data.country || '',
+                state: data.state || '',
+                lat: lat,
+                lon: lon
+            };
         }
-        
-        return {
-            name: 'Current Location',
-            country: '',
-            state: '',
-            lat: lat,
-            lon: lon
-        };
+    } catch (error) {
+        Utils.debugLog('Reverse geocoding failed', error, 'warn');
     }
+    
+    return {
+        name: 'Current Location',
+        country: '',
+        state: '',
+        lat: lat,
+        lon: lon
+    };
+}
 
     async loadFallbackLocation() {
         const fallbackLocation = {
