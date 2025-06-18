@@ -4,6 +4,7 @@ class BackgroundController {
         this.currentTime = null;
         this.isDay = true;
         this.transitionDuration = 1500;
+        this.currentLocation = null;
         
         this.init();
     }
@@ -41,9 +42,26 @@ class BackgroundController {
         document.body.insertBefore(backgroundContainer, document.body.firstChild);
     }
 
-    updateTimeOfDay() {
-        const now = new Date();
-        const hour = now.getHours();
+    updateTimeOfDay(location = null) {
+        if (location) {
+            this.currentLocation = location;
+        }
+
+        let hour;
+        
+        if (this.currentLocation && this.currentLocation.lat && this.currentLocation.lon) {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            
+            const timezoneOffset = Math.round(this.currentLocation.lon / 15);
+            const locationTime = new Date(utc + (timezoneOffset * 3600000));
+            hour = locationTime.getHours();
+            
+            console.log(`🌍 Location time for ${this.currentLocation.name}: ${locationTime.toLocaleTimeString()}`);
+        } else {
+            const now = new Date();
+            hour = now.getHours();
+        }
         
         this.isDay = hour >= 6 && hour < 18;
         this.currentTime = hour;

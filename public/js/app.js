@@ -521,6 +521,11 @@ class WeatherApp {
 
             this.currentWeather = currentWeather;
 
+            if (window.backgroundController) {
+                window.backgroundController.setLocation(location);
+                window.backgroundController.setWeather(currentWeather);
+            }
+
             if (window.realtimeUpdater) {
                 if (!window.realtimeUpdater.isActive) {
                     Utils.debugLog('Starting realtime updater...');
@@ -694,57 +699,104 @@ class WeatherApp {
 
         container.innerHTML = '';
 
-        dailyData.slice(0, 10).forEach(day => {
+        dailyData.slice(0, 10).forEach((day, index) => {
             if (!day || typeof day.tempMax !== 'number' || typeof day.tempMin !== 'number') return;
             
-            const dayElement = this.createDailyItem(day);
+            const dayElement = this.createDailyItem(day, index, dailyData.slice(0, 10));
             container.appendChild(dayElement);
         });
     }
 
-    createDailyItem(day) {
-        const div = document.createElement('div');
-        div.className = 'daily-item';
+    createDailyItem(day, index, allDays) {
+        const dayElement = document.createElement('div');
+        dayElement.className = 'daily-item';
 
-        const dayDiv = document.createElement('div');
-        dayDiv.className = 'day';
-        dayDiv.textContent = Utils.formatDay(day.date);
+        const leftSection = document.createElement('div');
+        leftSection.className = 'daily-left';
 
-        const iconDiv = document.createElement('div');
-        iconDiv.className = 'weather-icon daily-icon';
+        const dayName = document.createElement('div');
+        dayName.className = 'daily-day';
+        const date = new Date(day.date);
+        
+        if (index === 0) {
+            dayName.textContent = 'Today';
+        } else {
+            dayName.textContent = date.toLocaleDateString('en-US', { weekday: 'short' });
+        }
+
+        const iconElement = document.createElement('div');
+        iconElement.className = 'daily-weather-icon';
         
         const iconImg = document.createElement('img');
         iconImg.src = `https://openweathermap.org/img/wn/${day.iconCode}.png`;
         iconImg.alt = day.description;
         iconImg.onerror = () => {
-            iconDiv.innerHTML = Utils.getWeatherEmoji(day.condition);
+            iconElement.innerHTML = Utils.getWeatherEmoji(day.condition);
         };
-        iconDiv.appendChild(iconImg);
+        iconElement.appendChild(iconImg);
 
-        const tempsDiv = document.createElement('div');
-        tempsDiv.className = 'temps';
-        
-        const tempMinSpan = document.createElement('span');
-        tempMinSpan.className = 'temp-min';
-        tempMinSpan.textContent = Utils.formatTemperature(day.tempMin);
-        
-        const tempMaxSpan = document.createElement('span');
-        tempMaxSpan.className = 'temp-max';
-        tempMaxSpan.textContent = Utils.formatTemperature(day.tempMax);
-        
-        tempsDiv.appendChild(tempMinSpan);
-        tempsDiv.appendChild(tempMaxSpan);
+        leftSection.appendChild(dayName);
+        leftSection.appendChild(iconElement);
 
-        const precipDiv = document.createElement('div');
-        precipDiv.className = 'precipitation';
-        precipDiv.textContent = Utils.formatPercentage(day.precipitation);
+        const rightSection = document.createElement('div');
+        rightSection.className = 'daily-right';
 
-        div.appendChild(dayDiv);
-        div.appendChild(iconDiv);
-        div.appendChild(tempsDiv);
-        div.appendChild(precipDiv);
+        const precipitation = document.createElement('div');
+        precipitation.className = 'daily-precipitation';
+        const precipPercent = day.precipitation ? Math.round(day.precipitation) : 0;
+        precipitation.textContent = precipPercent > 0 ? precipPercent + '%' : '';
 
-        return div;
+        const tempRange = document.createElement('div');
+        tempRange.className = 'daily-temp-range';
+
+        const tempLow = document.createElement('div');
+        tempLow.className = 'daily-temp-low';
+        tempLow.textContent = Math.round(day.tempMin) + '°';
+
+        const tempBarContainer = document.createElement('div');
+        tempBarContainer.className = 'daily-temp-bar-container';
+
+        const allTemps = allDays.flatMap(d => [d.tempMin, d.tempMax]);
+        const globalMin = Math.min(...allTemps);
+        const globalMax = Math.max(...allTemps);
+        const tempRangeSpan = globalMax - globalMin;
+
+        const minPosition = tempRangeSpan > 0 ? ((day.tempMin - globalMin) / tempRangeSpan) * 100 : 0;
+        const maxPosition = tempRangeSpan > 0 ? ((day.tempMax - globalMin) / tempRangeSpan) * 100 : 100;
+        const barWidth = maxPosition - minPosition;
+
+        const tempBar = document.createElement('div');
+        tempBar.className = 'daily-temp-bar';
+        tempBar.style.left = minPosition + '%';
+        tempBar.style.width = barWidth + '%';
+
+        const lowDot = document.createElement('div');
+        lowDot.className = 'temp-dot temp-dot-low';
+        lowDot.style.left = minPosition + '%';
+
+        const highDot = document.createElement('div');
+        highDot.className = 'temp-dot temp-dot-high';
+        highDot.style.left = maxPosition + '%';
+
+        tempBarContainer.appendChild(tempBar);
+        tempBarContainer.appendChild(lowDot);
+        tempBarContainer.appendChild(highDot);
+
+        const tempHigh = document.createElement('div');
+        tempHigh.className = 'daily-temp-high';
+        tempHigh.textContent = Math.round(day.tempMax) + '°';
+
+        tempRange.appendChild(tempLow);
+        tempRange.appendChild(tempBarContainer);
+        tempRange.appendChild(tempHigh);
+
+        rightSection.appendChild(precipitation);
+        rightSection.appendChild(tempRange);
+
+        dayElement.appendChild(leftSection);
+        dayElement.appendChild(rightSection);
+
+        return dayElement;
     }
 
     updateAirQuality(airData) {

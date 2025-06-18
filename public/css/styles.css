@@ -288,15 +288,11 @@ body {
 
 .daily-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
-    margin-bottom: 8px;
-    background: transparent;
-    border: none;
+    justify-content: space-between;
+    padding: 16px 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0;
-    color: white;
+    transition: background-color 0.3s ease;
 }
 
 .daily-item:last-child {
@@ -329,6 +325,108 @@ body {
 .daily-item .temp-min {
     font-weight: 400;
     color: rgba(255, 255, 255, 0.6);
+}
+
+.daily-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+.daily-day {
+    font-size: 16px;
+    font-weight: 500;
+    color: #ffffff;
+    min-width: 70px;
+}
+
+.daily-weather-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.daily-weather-icon img {
+    width: 32px;
+    height: 32px;
+}
+
+.daily-description {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 8px;
+}
+
+.daily-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.daily-precipitation {
+    font-size: 14px;
+    color: #4FC3F7;
+    min-width: 40px;
+    text-align: center;
+}
+
+.daily-temp-range {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 200px;
+}
+
+.daily-temp-bar-container {
+    flex: 1;
+    position: relative;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    margin: 0 8px;
+}
+
+.daily-temp-bar {
+    position: absolute;
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #4FC3F7 0%, #FFB74D 50%, #FF8A65 100%);
+}
+
+.daily-temp-low {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    min-width: 35px;
+    text-align: right;
+}
+
+.daily-temp-high {
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 600;
+    min-width: 35px;
+}
+
+.temp-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    z-index: 2;
+}
+
+.temp-dot-low {
+    background-color: #4FC3F7;
+}
+
+.temp-dot-high {
+    background-color: #FF8A65;
 }
 
 .value {
@@ -582,6 +680,19 @@ body {
         padding: 20px 15px;
         border-radius: 18px;
     }
+
+    .daily-right {
+        gap: 12px;
+    }
+    
+    .daily-temp-range {
+        min-width: 150px;
+    }
+    
+    .daily-description {
+        display: none;
+    }
+
 }
 
 @media (max-width: 480px) {
