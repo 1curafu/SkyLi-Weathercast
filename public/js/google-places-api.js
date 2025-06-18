@@ -402,6 +402,57 @@ class GooglePlacesAPI {
     }
 }
 
+let selectedSuggestionIndex = -1;
+
+function addKeyboardNavigation() {
+    const input = DOMElements.get('#locationInput');
+    const container = DOMElements.get('#autocomplete-suggestions');
+    
+    input.addEventListener('keydown', (e) => {
+        const suggestions = container.querySelectorAll('[role="option"]');
+        
+        switch(e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestions.length - 1);
+                updateSuggestionSelection(suggestions);
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
+                updateSuggestionSelection(suggestions);
+                break;
+            case 'Enter':
+                if (selectedSuggestionIndex >= 0 && suggestions[selectedSuggestionIndex]) {
+                    e.preventDefault();
+                    suggestions[selectedSuggestionIndex].click();
+                }
+                break;
+            case 'Escape':
+                container.style.display = 'none';
+                input.setAttribute('aria-expanded', 'false');
+                selectedSuggestionIndex = -1;
+                break;
+        }
+    });
+}
+
+function updateSuggestionSelection(suggestions) {
+    const input = DOMElements.get('#locationInput');
+    
+    suggestions.forEach((suggestion, index) => {
+        suggestion.setAttribute('aria-selected', index === selectedSuggestionIndex ? 'true' : 'false');
+    });
+    
+    if (selectedSuggestionIndex >= 0) {
+        input.setAttribute('aria-activedescendant', `suggestion-${selectedSuggestionIndex}`);
+    } else {
+        input.removeAttribute('aria-activedescendant');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', addKeyboardNavigation);
+
 window.placesAPI = new GooglePlacesAPI();
 
 window.placesAPI.loadSearchHistory();

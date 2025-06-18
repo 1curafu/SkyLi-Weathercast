@@ -46,7 +46,16 @@ app.get('/api/geocode/:query', async (req, res) => {
         const { query } = req.params;
         console.log(`Geocoding: ${query}`);
         
-        const url = `https://pro.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=1&appid=${OPENWEATHER_API_KEY}`;
+        const coordMatch = query.match(/^(-?\d+\.?\d*),\s*(-?\d+\.?\d*)$/);
+        
+        let url;
+        if (coordMatch) {
+            const lat = coordMatch[1];
+            const lon = coordMatch[2];
+            url = `https://pro.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OPENWEATHER_API_KEY}`;
+        } else {
+            url = `https://pro.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=1&appid=${OPENWEATHER_API_KEY}`;
+        }
         
         const response = await fetch(url);
         
@@ -65,7 +74,7 @@ app.get('/api/geocode/:query', async (req, res) => {
         console.log(`OpenWeather found: ${location.name}, ${location.country} (${location.lat}, ${location.lon})`);
         
         res.json({
-            name: `${location.name}, ${location.country}`,
+            name: location.name,
             lat: location.lat,
             lon: location.lon,
             country: location.country,
