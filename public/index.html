@@ -11,34 +11,36 @@
     <body>
         <div class="weather-container">
             <div class="left-section">
-                <input type="text" id="locationInput" class="location-input" placeholder="Enter location">
-                <div id="autocomplete-suggestions" class="autocomplete-suggestions" style="display: none;"></div>
+                <div class="search-container">
+                    <input type="text" id="locationInput" class="location-input" placeholder="Enter location" aria-label="Enter location for weather forecast">
+                    <div id="autocomplete-suggestions" class="autocomplete-suggestions" style="display: none;"></div>
+                </div>
                 
                 <div id="locationName" class="location-name">Select a location</div>
 
                 <div class="current-weather">
-                    <div id="mainWeatherIcon" class="main-weather-icon"></div>
-                    <div id="currentTemp" class="temperature">--°</div>
-                    <div id="currentCondition" class="weather-condition">Waiting for location</div>
-                    <div id="currentDescription" class="weather-description">Please select a location to view weather</div>
+                    <div id="mainWeatherIcon" class="main-weather-icon" aria-hidden="true"></div>
+                    <div id="currentTemp" class="temperature" aria-label="Current temperature">--°</div>
+                    <div id="currentCondition" class="weather-condition" aria-label="Current weather condition">Waiting for location</div>
+                    <div id="currentDescription" class="weather-description" aria-label="Weather description">Please select a location to view weather</div>
                 </div>
 
                 <div class="weather-details">
                     <div class="detail-card">
                         <h3>Feels Like</h3>
-                        <div id="feelsLike" class="value">--°</div>
+                        <div id="feelsLike" class="value" aria-label="Feels like temperature">--°</div>
                     </div>
                     <div class="detail-card">
                         <h3>Precipitation</h3>
-                        <div id="precipitation" class="value">--%</div>
+                        <div id="precipitation" class="value" aria-label="Precipitation chance">--%</div>
                     </div>
                     <div class="detail-card">
                         <h3>Visibility</h3>
-                        <div id="visibility" class="value">-- km</div>
+                        <div id="visibility" class="value" aria-label="Visibility distance">-- km</div>
                     </div>
                     <div class="detail-card">
                         <h3>Humidity</h3>
-                        <div id="humidity" class="value">--%</div>
+                        <div id="humidity" class="value" aria-label="Humidity percentage">--%</div>
                     </div>
                 </div>
             </div>
@@ -47,7 +49,7 @@
                 <div class="hourly-forecast">
                     <h2>Hourly Forecast</h2>
                     <div id="hourlyContainer" class="hourly-wrapper">
-                        <div class="hourly-container scrollable-horizontal">
+                        <div class="hourly-container scrollable-horizontal" aria-label="24-hour weather forecast">
                             <div class="loading-message">Select a location to view hourly forecast</div>
                         </div>
                     </div>
@@ -56,7 +58,7 @@
                 <div class="daily-forecast">
                     <h2>10-Day Forecast</h2>
                     <div class="daily-wrapper">
-                        <div id="dailyContainer" class="daily-container scrollable-vertical">
+                        <div id="dailyContainer" class="daily-container scrollable-vertical" aria-label="10-day weather forecast">
                             <div class="loading-message">Select a location to view daily forecast</div>
                         </div>
                     </div>
@@ -65,15 +67,15 @@
                 <div class="additional-info">
                     <div class="info-card">
                         <h3>UV Index</h3>
-                        <div id="uvIndex" class="value">--</div>
+                        <div id="uvIndex" class="value" aria-label="UV index level">--</div>
                     </div>
                     <div class="info-card">
                         <h3>Wind Info</h3>
-                        <div id="windInfo" class="value">-- km/h</div>
+                        <div id="windInfo" class="value" aria-label="Wind speed and direction">-- km/h</div>
                     </div>
                     <div class="info-card">
                         <h3>Air Quality</h3>
-                        <div id="airQuality" class="value">--</div>
+                        <div id="airQuality" class="value" aria-label="Air quality index">--</div>
                     </div>
                 </div>
             </div>
@@ -91,11 +93,11 @@
         </footer>
 
         <script src="js/utils.js"></script>
-        <script src="js/ui-components.js"></script>
-        <script src="js/background-controller.js"></script>
         <script src="js/openweather-api.js"></script>
         <script src="js/google-places-api.js"></script>
         <script src="js/realtime-updater.js"></script>
+        <script src="js/background-controller.js"></script>
+        <script src="js/ui-components.js"></script>
         <script src="js/app.js"></script>
 
     </body>

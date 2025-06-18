@@ -1,0 +1,308 @@
+.dynamic-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.background-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: background 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.background-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.clear-day {
+    background: linear-gradient(135deg, 
+        rgba(135, 206, 235, 0.3) 0%, 
+        rgba(152, 216, 232, 0.4) 25%, 
+        rgba(135, 206, 235, 0.3) 50%, 
+        rgba(255, 215, 0, 0.2) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.clear-night {
+    background: linear-gradient(135deg, 
+        rgba(12, 12, 12, 0.8) 0%, 
+        rgba(26, 26, 46, 0.7) 50%, 
+        rgba(22, 33, 62, 0.6) 100%);
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+}
+
+.cloudy-day {
+    background: linear-gradient(135deg, 
+        rgba(168, 168, 168, 0.4) 0%, 
+        rgba(0, 204, 255, 0.3) 50%, 
+        rgba(135, 206, 235, 0.2) 100%);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+}
+
+.cloudy-night {
+    background: linear-gradient(135deg, 
+        rgba(44, 44, 44, 0.7) 0%, 
+        rgba(74, 74, 74, 0.6) 50%, 
+        rgba(26, 26, 46, 0.5) 100%);
+    backdrop-filter: blur(35px) saturate(160%);
+    -webkit-backdrop-filter: blur(35px) saturate(160%);
+}
+
+.rainy-day {
+    background: linear-gradient(135deg, 
+        rgba(74, 85, 104, 0.6) 0%, 
+        rgba(45, 55, 72, 0.7) 50%, 
+        rgba(26, 32, 44, 0.8) 100%);
+    backdrop-filter: blur(15px) saturate(120%);
+    -webkit-backdrop-filter: blur(15px) saturate(120%);
+}
+
+.rainy-night {
+    background: linear-gradient(135deg, 
+        rgba(26, 32, 44, 0.9) 0%, 
+        rgba(45, 55, 72, 0.8) 50%, 
+        rgba(74, 85, 104, 0.7) 100%);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+.snowy-day {
+    background: linear-gradient(135deg, 
+        rgba(226, 232, 240, 0.4) 0%, 
+        rgba(203, 213, 224, 0.5) 50%, 
+        rgba(160, 174, 192, 0.3) 100%);
+    backdrop-filter: blur(40px) saturate(170%);
+    -webkit-backdrop-filter: blur(40px) saturate(170%);
+}
+
+.snowy-night {
+    background: linear-gradient(135deg, 
+        rgba(45, 55, 72, 0.6) 0%, 
+        rgba(74, 85, 104, 0.5) 50%, 
+        rgba(113, 128, 150, 0.4) 100%);
+    backdrop-filter: blur(45px) saturate(150%);
+    -webkit-backdrop-filter: blur(45px) saturate(150%);
+}
+
+.stormy-day {
+    background: linear-gradient(135deg, 
+        rgba(26, 32, 44, 0.8) 0%, 
+        rgba(45, 55, 72, 0.7) 50%, 
+        rgba(74, 85, 104, 0.6) 100%);
+    backdrop-filter: blur(10px) saturate(100%) contrast(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(100%) contrast(120%);
+}
+
+.stormy-night {
+    background: linear-gradient(135deg, 
+        rgba(10, 10, 10, 0.9) 0%, 
+        rgba(26, 32, 44, 0.8) 50%, 
+        rgba(45, 55, 72, 0.7) 100%);
+    backdrop-filter: blur(8px) saturate(80%) contrast(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(80%) contrast(150%);
+}
+
+.misty-day {
+    background: linear-gradient(135deg, 
+        rgba(247, 250, 252, 0.3) 0%, 
+        rgba(237, 242, 247, 0.4) 50%, 
+        rgba(226, 232, 240, 0.5) 100%);
+    backdrop-filter: blur(50px) saturate(110%);
+    -webkit-backdrop-filter: blur(50px) saturate(110%);
+}
+
+.misty-night {
+    background: linear-gradient(135deg, 
+        rgba(74, 85, 104, 0.5) 0%, 
+        rgba(113, 128, 150, 0.4) 50%, 
+        rgba(160, 174, 192, 0.3) 100%);
+    backdrop-filter: blur(55px) saturate(120%);
+    -webkit-backdrop-filter: blur(55px) saturate(120%);
+}
+
+.sun-element {
+    position: absolute;
+    top: 15%;
+    right: 20%;
+    font-size: 60px;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+    user-select: none;
+    z-index: 1;
+}
+
+.sun-ray {
+    position: absolute;
+    top: 18%;
+    right: 23%;
+    width: 3px;
+    height: 30px;
+    background: linear-gradient(to bottom, rgba(255, 215, 0, 0.8), transparent);
+    transform-origin: bottom center;
+    border-radius: 2px;
+}
+
+.light-sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+}
+
+.raindrop {
+    position: absolute;
+    width: 2px;
+    height: 20px;
+    background: linear-gradient(to bottom, 
+        rgba(173, 216, 230, 0.8), 
+        rgba(173, 216, 230, 0.2));
+    border-radius: 1px;
+    top: -20px;
+}
+
+.rain-splash {
+    position: absolute;
+    bottom: 0;
+    width: 6px;
+    height: 6px;
+    background: rgba(173, 216, 230, 0.6);
+    border-radius: 50%;
+}
+
+.snowflake {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.9);
+    user-select: none;
+    top: -50px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.shooting-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 6px white;
+}
+
+.shooting-star::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(to right, white, transparent);
+    transform: translateX(-50px) rotate(45deg);
+}
+
+.floating-cloud {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.7);
+    user-select: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.night-cloud {
+    position: absolute;
+    color: rgba(200, 200, 200, 0.4);
+    user-select: none;
+    filter: blur(1px) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+.lightning-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.1s ease-out;
+    background: radial-gradient(circle, 
+        rgba(255, 255, 255, 0.6) 0%, 
+        rgba(135, 206, 250, 0.3) 50%, 
+        transparent 100%);
+}
+
+.fog-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120%;
+    height: 100%;
+    background: linear-gradient(45deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        rgba(255, 255, 255, 0.1) 100%);
+}
+
+@media (max-width: 768px) {
+    .sun-element {
+        font-size: 40px;
+        top: 10%;
+        right: 15%;
+    }
+    
+    .sun-ray {
+        width: 2px;
+        height: 20px;
+        top: 12%;
+        right: 17%;
+    }
+    
+    .light-sparkle {
+        width: 2px;
+        height: 2px;
+    }
+    
+    .raindrop {
+        width: 1px;
+        height: 15px;
+    }
+    
+    .snowflake {
+        font-size: 12px !important;
+    }
+    
+    .floating-cloud {
+        font-size: 20px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .sun-element {
+        font-size: 30px;
+        top: 8%;
+        right: 10%;
+    }
+    
+    .sun-ray {
+        height: 15px;
+        top: 10%;
+        right: 12%;
+    }
+}
