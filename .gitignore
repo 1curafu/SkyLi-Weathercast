@@ -1,20 +1,34 @@
-# Environment variables - NEVER commit these!
+# Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.node_modules
 
-# API Keys (legacy)
-config/api-keys.js
-
-# Node modules
+# Dependencies
 node_modules/
-
-# Logs
-*.log
 npm-debug.log*
-
-# OS generated files
-.DS_Store
-Thumbs.db
+yarn-debug.log*
+yarn-error.log*
 
 # Build outputs
 dist/
 build/
+
+# Netlify
+.netlify/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
