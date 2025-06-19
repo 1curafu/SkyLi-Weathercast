@@ -42,7 +42,7 @@ class BackgroundController {
         document.body.insertBefore(backgroundContainer, document.body.firstChild);
     }
 
-    updateTimeOfDay(location = null) {
+    async updateTimeOfDay(location = null) {
         if (location) {
             this.currentLocation = location;
         }
@@ -50,14 +50,94 @@ class BackgroundController {
         let hour;
         
         if (this.currentLocation && this.currentLocation.lat && this.currentLocation.lon) {
-            const now = new Date();
-            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-            
-            const timezoneOffset = Math.round(this.currentLocation.lon / 15);
-            const locationTime = new Date(utc + (timezoneOffset * 3600000));
-            hour = locationTime.getHours();
-            
-            console.log(`🌍 Location time for ${this.currentLocation.name}: ${locationTime.toLocaleTimeString()}`);
+            try {
+                const response = await fetch(`http://worldtimeapi.org/api/timezone`);
+                
+                if (response.ok) {
+                    const now = new Date();
+                    let timezoneOffset = Math.round(this.currentLocation.lon / 15);
+                    
+                    const cityTimezones = {
+                        'new york': -5, 'los angeles': -8, 'chicago': -6, 'denver': -7, 'seattle': -8,
+                        'miami': -5, 'boston': -5, 'san francisco': -8, 'las vegas': -8, 'phoenix': -7,
+                        'atlanta': -5, 'houston': -6, 'dallas': -6, 'philadelphia': -5, 'detroit': -5,
+                        
+                        'london': 0, 'paris': 1, 'berlin': 1, 'rome': 1, 'madrid': 1, 'amsterdam': 1,
+                        'zurich': 1, 'vienna': 1, 'prague': 1, 'budapest': 1, 'warsaw': 1, 'stockholm': 1,
+                        'oslo': 1, 'copenhagen': 1, 'helsinki': 2, 'athens': 2, 'istanbul': 3,
+                        
+                        'tokyo': 9, 'sydney': 10, 'melbourne': 10, 'mumbai': 5.5, 'dubai': 4,
+                        'moscow': 3, 'beijing': 8, 'singapore': 8, 'bangkok': 7, 'jakarta': 7,
+                        'seoul': 9, 'hong kong': 8, 'shanghai': 8, 'manila': 8, 'kuala lumpur': 8,
+                        'taipei': 8, 'hanoi': 7, 'ho chi minh': 7, 'yangon': 6.5, 'dhaka': 6,
+                        
+                        'cairo': 2, 'johannesburg': 2, 'lagos': 1, 'nairobi': 3, 'casablanca': 1,
+                        'tunis': 1, 'algiers': 1, 'addis ababa': 3, 'kinshasa': 1,
+                        
+                        'sao paulo': -3, 'rio de janeiro': -3, 'buenos aires': -3, 'lima': -5,
+                        'bogota': -5, 'caracas': -4, 'santiago': -4, 'mexico city': -6,
+                        'guatemala city': -6, 'san jose': -6, 'panama city': -5, 'quito': -5,
+                        
+                        'toronto': -5, 'vancouver': -8, 'montreal': -5, 'calgary': -7, 'ottawa': -5,
+                        'winnipeg': -6, 'halifax': -4, 'edmonton': -7,
+                        
+                        'perth': 8, 'brisbane': 10, 'adelaide': 9.5, 'canberra': 10, 'darwin': 9.5,
+                        'auckland': 12, 'wellington': 12, 'christchurch': 12, 'suva': 12,
+                        
+                        'reykjavik': 0, 'dublin': 0, 'edinburgh': 0, 'cardiff': 0, 'belfast': 0
+                    };
+                    
+                    const locationName = (this.currentLocation.name || '').toLowerCase();
+                    for (const [city, offset] of Object.entries(cityTimezones)) {
+                        if (locationName.includes(city)) {
+                            timezoneOffset = offset;
+                            console.log(`🏙️ Using known timezone for ${city}: UTC${offset >= 0 ? '+' : ''}${offset}`);
+                            break;
+                        }
+                    }
+                    
+                    const month = now.getMonth() + 1;
+                    const isDST = month >= 3 && month <= 10;
+                    
+                    if (isDST) {
+                        if (this.currentLocation.lon > -130 && this.currentLocation.lon < -60 && 
+                            this.currentLocation.lat > 25 && this.currentLocation.lat < 60) {
+                            if (!locationName.includes('arizona') && !locationName.includes('hawaii')) {
+                                timezoneOffset += 1;
+                                console.log('🌞 Applied North America DST (+1 hour)');
+                            }
+                        }
+                        else if (this.currentLocation.lon > -10 && this.currentLocation.lon < 40 && 
+                                 this.currentLocation.lat > 35 && this.currentLocation.lat < 70) {
+                            timezoneOffset += 1;
+                            console.log('🌞 Applied Europe DST (+1 hour)');
+                        }
+                        else if (this.currentLocation.lon > 110 && this.currentLocation.lon < 160 && 
+                                 this.currentLocation.lat < -10 && this.currentLocation.lat > -45) {
+                            const isAustralianDST = month >= 10 || month <= 3;
+                            if (isAustralianDST) {
+                                timezoneOffset += 1;
+                                console.log('🌞 Applied Australia DST (+1 hour)');
+                            }
+                        }
+                    }
+                    
+                    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                    const locationTime = new Date(utc + (timezoneOffset * 3600000));
+                    hour = locationTime.getHours();
+                    
+                    console.log(`🌍 Accurate time for ${this.currentLocation.name}: ${locationTime.toLocaleTimeString()} (UTC${timezoneOffset >= 0 ? '+' : ''}${timezoneOffset})`);
+                } else {
+                    throw new Error('WorldTimeAPI failed');
+                }
+            } catch (error) {
+                console.warn('Using fallback timezone calculation');
+                const now = new Date();
+                const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                const timezoneOffset = Math.round(this.currentLocation.lon / 15);
+                const locationTime = new Date(utc + (timezoneOffset * 3600000));
+                hour = locationTime.getHours();
+            }
         } else {
             const now = new Date();
             hour = now.getHours();
@@ -65,6 +145,8 @@ class BackgroundController {
         
         this.isDay = hour >= 6 && hour < 18;
         this.currentTime = hour;
+        
+        console.log(`🕐 Location time: ${hour}:00, isDay: ${this.isDay} for ${this.currentLocation?.name || 'unknown location'}`);
         
         if (this.currentWeather) {
             this.updateBackground(this.currentWeather);
@@ -85,7 +167,17 @@ class BackgroundController {
         this.applyBackground(condition, timeOfDay);
         this.createWeatherParticles(condition, timeOfDay);
         
-        console.log(`🌈 Background updated: ${condition} (${timeOfDay})`);
+        console.log(`🌈 Background updated: ${condition} (${timeOfDay}) for ${this.currentLocation?.name || 'unknown location'}`);
+    }
+
+    setLocation(location) {
+        console.log(`📍 Setting location: ${location.name}`);
+        this.currentLocation = location;
+        this.updateTimeOfDay(location);
+    }
+
+    setWeather(weather) {
+        this.updateWeather(weather);
     }
 
     getWeatherCondition(condition) {
@@ -173,7 +265,7 @@ class BackgroundController {
         switch (condition) {
             case 'clear':
                 if (timeOfDay === 'day') {
-                    this.createSunElements(container);
+                    //this.createSunElements(container);
                 } else {
                     this.createStars(container);
                 }
@@ -198,13 +290,11 @@ class BackgroundController {
     }
 
     createSunElements(container) {
-        // sun
         const sun = document.createElement('div');
         sun.className = 'sun-element';
         sun.textContent = '☀️';
         container.appendChild(sun);
 
-        // sun rays
         for (let i = 0; i < 8; i++) {
             const ray = document.createElement('div');
             ray.className = 'sun-ray';
@@ -213,7 +303,6 @@ class BackgroundController {
             container.appendChild(ray);
         }
 
-        // light sparkles
         for (let i = 0; i < 20; i++) {
             const sparkle = document.createElement('div');
             sparkle.className = 'light-sparkle';
@@ -235,7 +324,6 @@ class BackgroundController {
             container.appendChild(raindrop);
         }
 
-        // rain splash effects
         for (let i = 0; i < 10; i++) {
             const splash = document.createElement('div');
             splash.className = 'rain-splash';
@@ -331,8 +419,6 @@ class BackgroundController {
                 setTimeout(() => {
                     lightning.style.opacity = '0';
                 }, isIntense ? 200 : 100);
-                
-                console.log('⚡ Lightning flash!');
             }
         };
         
@@ -349,10 +435,6 @@ class BackgroundController {
             fog.style.opacity = isNight ? 0.4 + (i * 0.1) : 0.2 + (i * 0.1);
             container.appendChild(fog);
         }
-    }
-
-    setWeather(weather) {
-        this.updateWeather(weather);
     }
 
     setTransitionDuration(duration) {

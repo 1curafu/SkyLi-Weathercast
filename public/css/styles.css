@@ -218,8 +218,8 @@ body {
 }
 
 #airQuality {
-    font-size: 12px;
-    text-align: center;
+    font-size: 22px;
+    font-weight: 400;
 }
 
 .scrollable-horizontal {
@@ -573,16 +573,15 @@ body {
 }
 
 .app-footer {
-    margin-top: 40px;
-    padding: 30px 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 22px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 20px auto 0 auto !important;
+    padding: 15px 20px !important;
+    width: 90% !important;
+    max-width: none !important;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-sizing: border-box;
 }
 
 .footer-content {
@@ -644,6 +643,10 @@ body {
     .temperature {
         font-size: 72px;
     }
+
+    #airQuality {
+        font-size: 28px;
+    }
     
     .main-weather-icon img {
         width: 72px;
@@ -676,9 +679,9 @@ body {
     }
     
     .app-footer {
-        margin-top: 20px;
-        padding: 20px 15px;
-        border-radius: 18px;
+        margin: 15px auto 0 auto !important;
+        padding: 15px !important;
+        width: 95% !important;
     }
 
     .daily-right {
@@ -702,6 +705,10 @@ body {
     
     .temperature {
         font-size: 64px;
+    }
+
+    #airQuality {
+        font-size: 26px;
     }
     
     .main-weather-icon img {
@@ -728,7 +735,7 @@ body {
     }
     
     .app-footer {
-        margin-top: 15px;
+        margin: 15px 5% 0 20%;
         padding: 15px 10px;
         border-radius: 16px;
     }

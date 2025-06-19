@@ -522,7 +522,7 @@ class WeatherApp {
             this.currentWeather = currentWeather;
 
             if (window.backgroundController) {
-                window.backgroundController.setLocation(location);
+                await window.backgroundController.setLocation(location);
                 window.backgroundController.setWeather(currentWeather);
             }
 
